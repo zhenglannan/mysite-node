@@ -1,11 +1,11 @@
 module.exports=[{
-  uuid:1,
+  // uuid:1,
   content:`从我记事开始
   我就喜欢看星空
   而这并不是为了遇见外星人
   而是为了遇见你`,
   cntComment:0,
-  ctnLike:1,
+  cntLike:1,
   referAuthorName:'',
   referWorkId:'',
   referWorkName:'',
@@ -13,14 +13,225 @@ module.exports=[{
   creator:{
     id:1,
     username:'苏长情',
-    intro:'愿有岁月可回首，且以深情共白头。'
+    intro:'愿有岁月可回首，且以深情共白头。',
+    avator:'default.jpg'
   },
   comment:[]
 },{ 
-  uuid:2,
+  // uuid:2,
   content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
   cntComment:0,
-  ctnLike:5,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},
+{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
+  referAuthorName:'',
+  referWorkId:'',
+  referWorkName:'',
+  tags:'',
+  creator:{},
+  comment:[]
+},{ 
+  // uuid:2,
+  content:'两个人在一起，并不是要两个人每时每刻都粘在一起，是为了让自己知道，在这世界上还有一个人爱着自己。',
+  cntComment:0,
+  cntLike:5,
   referAuthorName:'',
   referWorkId:'',
   referWorkName:'',

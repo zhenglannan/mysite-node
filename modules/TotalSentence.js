@@ -3,10 +3,10 @@ var Schema = mongoose.Schema
 var sentenceData = require('../initData/sentences')
 
 var senSchema = new Schema({
-  uuid: {
-    type: Number,
-    required: true
-  },
+  // uuid: {
+  //   type: Number,
+  //   required: true
+  // },
   content: {
     type: String,
     required: true
@@ -22,18 +22,11 @@ var senSchema = new Schema({
   creator: {
     id: Number,
     username: String,
-    avator: {
-      type: String,
-      default: 'default.jpg'
-    },
+    avator:String,
     intro: String
   },
   comment: [{
-    userId: Number,
-    avator: {
-      type: String,
-      default: 'default.jpg'
-    },
+    username:String,
     content: String,
     createdAt: {
       type: Date,
@@ -55,11 +48,6 @@ TotalSentence.find({}, function (err, data) {
       TotalSentence.create(item);
     })
   }
-  // else{
-  // TotalSentence.count(function(err,count){
-  //   console.log(count);
-  // })
-  // }
 })
 
 module.exports = TotalSentence
