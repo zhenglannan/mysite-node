@@ -20,25 +20,22 @@ var senSchema = new Schema({
   // createdAt:{type: Date, default: Date.now()},
   // updatedAt:{type: Date, default: Date.now()},
   creator: {
-    id: Number,
+    _id: Number,
     username: String,
-    avator:String,
+    avatar:String,
     intro: String
   },
   comment: [{
     username:String,
     content: String,
-    createdAt: {
-      type: Date,
-      default: Date.now()
-    }
+    create_time: {type:Date,default:Date.now},
   }]
 }, {
   versionKey: false,
   timestamps: true
 })
-
-// senSchema.index({id: 1});
+// ??
+senSchema.index({createdAt: -1,cntLike:-1});
 
 var TotalSentence = mongoose.model('TotalSentence', senSchema);
 TotalSentence.find({}, function (err, data) {

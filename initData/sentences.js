@@ -11,10 +11,10 @@ module.exports=[{
   referWorkName:'',
   tags:'原创',
   creator:{
-    id:1,
+    _id:1,
     username:'苏长情',
     intro:'愿有岁月可回首，且以深情共白头。',
-    avator:'/images/default.jpg'
+    avatar:'/images/default.jpg'
   },
   comment:[]
 },{

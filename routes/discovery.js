@@ -1,7 +1,7 @@
 // 首页句子展示
 var express = require('express');
 var router = express.Router();
-var SentenceModel=require('../modules/TotalSentence')
+var SentenceModel=require('../models/TotalSentence')
 // 全局定义currentpage
 var hotCurrentPage=0; 
 var newCurrentPage=0;
