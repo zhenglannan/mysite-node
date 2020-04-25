@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 var sentenceData = require('../initData/sentences')
-
+//句子模板
 var senSchema = new Schema({
   // uuid: {
   //   type: Number,
@@ -20,17 +20,17 @@ var senSchema = new Schema({
   // createdAt:{type: Date, default: Date.now()},
   // updatedAt:{type: Date, default: Date.now()},
   creator: {
-    _id: Number,
+    _id: String,
     username: String,
     avatar:String,
-    intro: String
+    // intro: String
   },
   comment: [{
     username:String,
     content: String,
-    create_time: {type:Date,default:Date.now},
+    create_time: String,
   }]
-}, {
+}, {//时间戳
   versionKey: false,
   timestamps: true
 })

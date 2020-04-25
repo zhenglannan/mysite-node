@@ -63,9 +63,11 @@ app.use(session({
 app.use(express.static(path.join(__dirname, './public')));
 
 // 配置解析表单POST请求体插件（一定得在路由之前配）
+/* 以application/x-www-form-urlencoded格式解析数据 */
 app.use(bodyParser.urlencoded({
   extended: false
 }))
+/* 以application/json格式解析数据 */
 app.use(bodyParser.json())
 // 路由中间件
 Router(app)

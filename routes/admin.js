@@ -41,6 +41,10 @@ router.post('/register', function (req, res, next) {
           email: email,
           // id: admin_id,
           create_time: dtime().format('YYYY-MM-DD'),
+          // intro:'',
+          posts:[],
+          likes:[],
+          collections:[]
         };
         AdminModel.create(newAdmin);
         req.session.admin_id = newAdmin._id;
@@ -82,7 +86,7 @@ router.post('/login', function (req, res, next) {
       })
     } else {
       req.session.admin_id = admin._id;
-      console.log( req.session);
+      // console.log(req.session);
       res.send({
         status: 1,
         success: '登录成功'
@@ -92,15 +96,23 @@ router.post('/login', function (req, res, next) {
 })
 // 登出
 router.get('/signout', function (req, res, next) {
-  console.log( '之前'+req.session);
+  console.log('之前' + req.session.admin_id);
   try {
     // req.session.cookie.maxAge=0;
     req.session.destroy(function (err) {
-      console.log( req.session);
-      res.send({
-        status: 1,
-        success: '退出成功'
-      })
+      if (err) {
+        console.log('退出失败', err)
+        res.send({
+          status: 0,
+          message: '退出失败'
+        })
+      } else {
+        // console.log(req.session);
+        res.send({
+          status: 1,
+          success: '退出成功'
+        })
+      }
     })
   } catch (err) {
     console.log('退出失败', err)
@@ -112,9 +124,9 @@ router.get('/signout', function (req, res, next) {
 })
 // 得到管理员信息
 router.get('/getAdminInfo', function (req, res, next) {
-  console.log(req.session);
+  console.log(req.session.admin_id);
   const admin_id = req.session.admin_id;
-  if (!admin_id ) {
+  if (!admin_id) {
     console.log('获取管理员信息的session失效');
     res.send({
       status: 0,
@@ -122,27 +134,30 @@ router.get('/getAdminInfo', function (req, res, next) {
       message: '获取管理员信息失败'
     })
     return
+  }else{
+    AdminModel.findOne({
+      _id: admin_id
+    }, function (err, info) {
+      if (err) {
+        res.status(500).json({
+          status: 500,
+          message: err.message
+        })
+      } else {
+        res.send({
+          status: 1,
+          data: info
+        })
+      }
+    });
   }
-  AdminModel.findOne({
-    _id: admin_id
-  }, function (err, info) {
-    if (err) {
-      res.status(500).json({
-        status: 500,
-        message: err.message
-      })
-    } else {
-      res.send({
-        status: 1,
-        data: info
-      })
-    }
-  });
+  
 })
 
 // 得到其他管理员信息
-router.get("/getOtherUserInfo",function(req,res,next){
-  const user_id=req.query.user_id;
+router.get("/getOtherUserInfo", function (req, res, next) {
+  console.log(req.query)
+  const user_id = req.query.user_id;
   AdminModel.findOne({
     _id: user_id
   }, function (err, info) {
@@ -158,5 +173,26 @@ router.get("/getOtherUserInfo",function(req,res,next){
       })
     }
   });
+})
+
+// 添加新专辑
+router.post('/addCollecton',function(req,res,next){
+  console.log(req.body);
+  
+})
+//发布句子
+router.post('/addPost',function(req,res,next){
+  console.log(req.body);
+  const content=req.body.content;
+  const tags=req.body.tags;
+  if(req.body.referWorkName){
+    const referWorkName=req.body.referWorkName
+  }
+  if(req.body.referWorkAuthorName){
+    const referWorkAuthorName=req.body.referWorkAuthorName
+  }
+  const tags=req.body.tags;
+
+
 })
 module.exports = router;

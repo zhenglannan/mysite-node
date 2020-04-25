@@ -1,0 +1,17 @@
+module.exports = [{
+  intro: "",
+  cntFollower: 0,
+  cntFollowing: 0,
+  cntGetLike: 0,
+  cntLike: 0,
+  cntCollection: 0,
+  cntPost: 0,
+  _id: "5ea42d83382be72714a9d0a6",
+  user_name: "郑岚",
+  password: "28c8edde3d61a0411511d3b1866f0636",
+  email: "1@123.com",
+  posts: [],
+  likes: [],
+  collections: [],
+  tags:[],
+}]
