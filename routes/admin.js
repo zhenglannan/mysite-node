@@ -4,7 +4,9 @@ var dtime = require('time-formater')
 // var encryption = require('../controller/admin/session')
 var md5 = require("blueimp-md5")
 var AdminModel = require('../models/admin')
+var collectionModel = require('../models/collection')
 
+var user=require('../controller/uploadController/uploadImage')
 // 注册
 router.post('/register', function (req, res, next) {
   // console.log(req.body)
@@ -40,14 +42,17 @@ router.post('/register', function (req, res, next) {
           password: newPassword,
           email: email,
           // id: admin_id,
-          create_time: dtime().format('YYYY-MM-DD'),
+          create_time: dtime().format('YYYY-MM-DD HH:mm'),
           // intro:'',
           posts:[],
           likes:[],
-          collections:[]
+          collections:[],
+          avatar:'/images/default.jpg'
         };
         AdminModel.create(newAdmin);
         req.session.admin_id = newAdmin._id;
+        req.session.user_name = newAdmin.user_name;
+        req.session.avatar = newAdmin.avatar;
         res.send({
           status: 1,
           message: '注册用户成功',
@@ -176,8 +181,9 @@ router.get("/getOtherUserInfo", function (req, res, next) {
 })
 
 // 添加新专辑
-router.post('/addCollecton',function(req,res,next){
-  console.log(req.body);
+router.post('/addCollection',function(req,res,next){
+  // console.log(req.body);
+  user.uploadImage(req,res);
   
 })
 //发布句子

@@ -3,12 +3,12 @@ var mongoose =require ('mongoose')
 const Schema = mongoose.Schema;
 //专辑模板
 var collectionSchema=new Schema({
-  _id:String,
+  // _id:String ,
   cover:{type: String, default: '/images/default.jpg'},
   name:String,
   intro:String,
   create_time: String,
-  updata_time:String,
+  // updata_time:String,
   creator: {
     _id: String,
     username: String,
@@ -22,7 +22,7 @@ var collectionSchema=new Schema({
     referAuthorName: String,
     referWorkName: String,
   }],
-  // 发布专辑人的其他专辑
+  // 发布专辑人的其他专辑??
   otherCollections:[{
     _id:String,
     cover:{type: String, default: '/images/default.jpg'},
