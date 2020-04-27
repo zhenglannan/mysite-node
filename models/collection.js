@@ -23,11 +23,11 @@ var collectionSchema=new Schema({
     referWorkName: String,
   }],
   // 发布专辑人的其他专辑??
-  otherCollections:[{
-    _id:String,
-    cover:{type: String, default: '/images/default.jpg'},
-    name:String
-  }]
+  // otherCollections:[{
+  //   _id:String,
+  //   cover:{type: String, default: '/images/default.jpg'},
+  //   name:String
+  // }]
 })
 
 // adminSchema.index({email: 1});

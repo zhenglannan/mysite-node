@@ -1,11 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var dtime = require('time-formater')
-// var encryption = require('../controller/admin/session')
 var md5 = require("blueimp-md5")
 var AdminModel = require('../models/admin')
-var collectionModel = require('../models/collection')
-
+// var CollectionModel = require('../models/collection')
+var TotalSentenceModel =require('../models/TotalSentence')
 var user=require('../controller/uploadController/uploadImage')
 // 注册
 router.post('/register', function (req, res, next) {
@@ -43,16 +42,16 @@ router.post('/register', function (req, res, next) {
           email: email,
           // id: admin_id,
           create_time: dtime().format('YYYY-MM-DD HH:mm'),
-          // intro:'',
+          intro:'',
           posts:[],
           likes:[],
           collections:[],
           avatar:'/images/default.jpg'
         };
         AdminModel.create(newAdmin);
-        req.session.admin_id = newAdmin._id;
-        req.session.user_name = newAdmin.user_name;
-        req.session.avatar = newAdmin.avatar;
+        // req.session.admin_id = newAdmin._id;
+        // req.session.user_name = newAdmin.user_name;
+        // req.session.avatar = newAdmin.avatar;
         res.send({
           status: 1,
           message: '注册用户成功',
@@ -80,8 +79,6 @@ router.post('/login', function (req, res, next) {
         type: 'ERROR_PASSWORD',
         message: '该用户未注册',
       })
-      // res.redirect('http://127.0.0.1:3000/admin/register')
-      // res.redirect('/admin/register')
     } else if (password.toString() != admin.password.toString()) {
       // console.log('管理员登录密码错误');
       res.send({
@@ -91,6 +88,8 @@ router.post('/login', function (req, res, next) {
       })
     } else {
       req.session.admin_id = admin._id;
+      req.session.user_name = admin.user_name;
+      req.session.avatar = admin.avatar;
       // console.log(req.session);
       res.send({
         status: 1,
@@ -190,15 +189,67 @@ router.post('/addCollection',function(req,res,next){
 router.post('/addPost',function(req,res,next){
   console.log(req.body);
   const content=req.body.content;
-  const tags=req.body.tags;
-  if(req.body.referWorkName){
-    const referWorkName=req.body.referWorkName
+  const tags=req.body.tags; 
+  const referWorkName=req.body.referWorkName
+  const referWorkAuthorName=req.body.referWorkAuthorName
+  const newSentence={
+    content:content,
+    tags:tags,
+    referWorkName:referWorkName,
+    referWorkAuthorName:referWorkAuthorName,
+    creator:{
+      _id: req.session.admin_id,
+      username: req.session.user_name,
+      avatar:req.session.avatar,
+    },
+    comment: []
   }
-  if(req.body.referWorkAuthorName){
-    const referWorkAuthorName=req.body.referWorkAuthorName
-  }
-  const tags=req.body.tags;
+  // 总的句子添加
+  TotalSentenceModel.create(newSentence).then(data=>{
+    console.log(data);
+    const postSen={
+      _id:data._id,
+      content:content,
+      tags:tags,
+      referWorkName:referWorkName,
+      referWorkAuthorName:referWorkAuthorName,
+      cntLike:0,
+      cntComment:0,
+    }
+    console.log(postSen);
+    
+    // 管理员句子添加
+    AdminModel.findOne({_id: req.session.admin_id},function (err, admin){
+      // console.log(admin);
+      
+      admin.posts.push(postSen);
+      admin.save(function (err) {
+        if (err) return handleError(err)
+        console.log('Success!');
+      })
+    })
+  })
 
+})
+// 更改个人信息
+router.post('/updateInfo',function(req,res,next){
+
+})
+// 更改密码
+router.post('/updatePwd',function(req,res,next){
+
+})
+// 设置个人标签，用于内容推荐
+router.post('/setTags',function(req,res,next){
+
+})
+// 删除专辑
+router.get('/deleteCollection',function(req,res,next){
+
+})
+
+// 删除句子
+router.get('/deletePosts',function(req,res,next){
 
 })
 module.exports = router;

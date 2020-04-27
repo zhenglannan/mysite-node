@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const dtime = require('time-formater')
 var AdminModel = require('../../models/admin')
-var collectionModel = require('../../models/collection')
+var CollectionModel = require('../../models/collection')
 
 let user = {
   uploadImage: function (req, res) {
@@ -55,9 +55,34 @@ let user = {
             }
           };
           // 在总的专辑model中创建此专辑
-          collectionModel.create(newCollection);
+          CollectionModel.create(newCollection).then(data => {
+            // console.log(data._id);
+            // 把新创建的专辑的id放在session中，用于后面添加进adminModel中
+            const newAdminCollection = {
+              _id: data._id,
+              cover: newPath,
+              name: name
+            };
+            AdminModel.findById(req.session.admin_id, function (err, admin) {
+              if (err) {
+                console.log(err);
+                return
+              }
+                // 每次更改除了create都需要调用save中间件
+              admin.collections.push(newAdminCollection);
+              admin.save(function (err) {
+                if (err) return handleError(err)
+                console.log('Success!');
+              })
+            })
+          })
+          // const newAdminCollection={
+          //   _id:req.session.createCollectionId
+          // }
           // 在管理员model中创建的专辑中添加对象
-          // AdminModel.f
+          // AdminModel.findById(req.session.admin_id,function (err, admin){
+          //   admin.collections.create
+          // })
           res.send({
             // "/images/packImage/"写自己的保存上传图片的文件
             data: "/images/loadImage/" + avatarName

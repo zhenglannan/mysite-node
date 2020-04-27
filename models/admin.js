@@ -2,6 +2,12 @@ var mongoose =require ('mongoose')
 var adminData = require('../initData/adminData')
 
 const Schema = mongoose.Schema;
+
+// var collectionSchema=new Schema({
+//   _id:String,
+//   cover:{type: String, default: '/images/default.jpg'},
+//   name:String
+// })
 //用户模板
 var adminSchema=new Schema({
   user_name: {type:String,required:true},
@@ -10,7 +16,7 @@ var adminSchema=new Schema({
   // id: Number,
   create_time: String,
   avatar: {type: String, default: '/images/default.jpg'},
-  intro:{type: String, default: ''},
+  intro:String,
   cntFollower:{type: Number, default:0},
   cntFollowing:{type: Number, default: 0},
   cntGetLike:{type: Number, default: 0},

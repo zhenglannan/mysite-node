@@ -11,8 +11,8 @@ var senSchema = new Schema({
     type: String,
     required: true
   },
-  cntComment: Number,
-  cntLike: Number,
+  cntComment: {type: Number, default: 0},
+  cntLike: {type: Number, default: 0},
   referAuthorName: String,
   referWorkId: String,
   referWorkName: String,
@@ -40,7 +40,7 @@ senSchema.index({createdAt: -1,cntLike:-1});
 var TotalSentence = mongoose.model('TotalSentence', senSchema);
 TotalSentence.find({}, function (err, data) {
   // 判断数组为空
-  if (!data||data.length===0) {
+  if (!data||data.length===0) { 
     sentenceData.forEach(item => {
       TotalSentence.create(item);
     })
