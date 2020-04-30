@@ -3,7 +3,6 @@ var mongoose =require ('mongoose')
 const Schema = mongoose.Schema;
 //专辑模板
 var collectionSchema=new Schema({
-  // _id:String ,
   cover:{type: String, default: '/images/default.jpg'},
   name:String,
   intro:String,
@@ -17,8 +16,8 @@ var collectionSchema=new Schema({
   posts:[{
     _id:String,
     content:String,
-    cntLike:Number,
-    cntComment:Number,
+    cntLike:{type:Number,default:0},
+    cntComment:{type:Number,default:0},
     referAuthorName: String,
     referWorkName: String,
   }],

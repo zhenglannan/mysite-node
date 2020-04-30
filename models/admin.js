@@ -33,7 +33,11 @@ var adminSchema=new Schema({
     cntComment:Number,
     referAuthorName: String,
     referWorkName: String,
-    tags:Array
+    tags:Array,
+    getLike:{
+      type:Boolean,
+      default:false
+    }
   }],
 //喜欢的句子
   likes:[{
@@ -43,6 +47,10 @@ var adminSchema=new Schema({
     cntComment:Number,
     referAuthorName: String,
     referWorkName: String,
+    getLike:{
+      type:Boolean,
+      default:true
+    }
   }],
   collections:[{
     _id:String,
