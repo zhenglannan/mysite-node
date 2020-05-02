@@ -13,13 +13,13 @@ var collectionSchema=new Schema({
     username: String,
   },
   //包含的句子
-  posts:[{
+  posts:[{  
     _id:String,
-    content:String,
-    cntLike:{type:Number,default:0},
-    cntComment:{type:Number,default:0},
-    referAuthorName: String,
-    referWorkName: String,
+    // content:String,
+    // cntLike:{type:Number,default:0},
+    // cntComment:{type:Number,default:0},
+    // referAuthorName: String,
+    // referWorkName: String,
   }],
   // 发布专辑人的其他专辑??
   // otherCollections:[{

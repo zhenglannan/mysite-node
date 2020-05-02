@@ -28,29 +28,24 @@ var adminSchema=new Schema({
   //发布的句子
   posts:[{
     _id:String,
-    content:String,
-    cntLike:Number,
-    cntComment:Number,
-    referAuthorName: String,
-    referWorkName: String,
-    tags:Array,
-    getLike:{
-      type:Boolean,
-      default:false
-    }
+    // content:String,
+    // cntLike:Number,
+    // cntComment:Number,
+    // getLike:{
+    //   type:Boolean,
+    //   default:false
+    // }
   }],
 //喜欢的句子
   likes:[{
     _id:String,
-    content:String,
-    cntLike:Number,
-    cntComment:Number,
-    referAuthorName: String,
-    referWorkName: String,
-    getLike:{
-      type:Boolean,
-      default:true
-    }
+    // content:String,
+    // cntLike:Number,
+    // cntComment:Number,
+    // getLike:{
+    //   type:Boolean,
+    //   default:true
+    // }
   }],
   collections:[{
     _id:String,
@@ -59,7 +54,7 @@ var adminSchema=new Schema({
   }]
 })
 
-adminSchema.index({email: 1});
+adminSchema.index({email: 1},{_id:-1});
 
 var Admins = mongoose.model('Admins', adminSchema);
 Admins.find({}, function (err, data) {

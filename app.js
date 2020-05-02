@@ -45,7 +45,7 @@ app.use(express.urlencoded({
 }));
 // 解析前端传过来的cookie
 app.use(cookieParser());
-// 一定要在路由配置之前
+// 一定要在路由配置之前session
 app.use(session({
   secret: 'keyboard cat', //配置加密字符串，它会在原有加密基础之上和这个字符串拼接起来加密
   resave: false, //即使session没有被修改也保存session
@@ -62,7 +62,7 @@ app.use(session({
 // 指定静态资源所在目录(path.join对路径进行拼接：__dirname为绝对路径)
 app.use(express.static(path.join(__dirname, './public')));
 
-// 配置解析表单POST请求体插件（一定得在路由之前配）
+// 配置解析表单POST请求体插件（一定得在路由之前配body-parser）
 /* 以application/x-www-form-urlencoded格式解析数据 */
 app.use(bodyParser.urlencoded({
   extended: false

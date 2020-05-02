@@ -184,9 +184,26 @@ router.get("/getOtherUserInfo", function (req, res, next) {
 router.post('/addCollection', function (req, res, next) {
   // console.log(req.body);
   user.uploadImage(req, res);
-
 })
-
+// 查找专辑
+router.get('/findCollection', function (req, res, next) {
+  console.log(req.query)
+  CollectionModel.findOne({
+    _id: req.query._id
+  }, function (err, data) {
+    if (err) {
+      res.send({
+        status: 0,
+        message: err.message
+      })
+    } else {
+      res.send({
+        status: 1,
+        data: data
+      })
+    }
+  })
+})
 // 删除专辑
 router.get('/deleteCollection', function (req, res, next) {
   CollectionModel.findByIdAndDelete(req.query._id, function (err, data) {
@@ -205,7 +222,7 @@ router.get('/deleteCollection', function (req, res, next) {
   AdminModel.findByIdAndUpdate(req.session.admin_id, {
     '$pull': {
       'collections': {
-        '_id': req.body._id
+        '_id': req.query._id
       }
     }
   }, function (err, admin) {
@@ -213,23 +230,14 @@ router.get('/deleteCollection', function (req, res, next) {
   })
 })
 // 修改专辑
-router.post('/updateCollection', function (req, res, next) {
+router.post('/updateCollection/:id', function (req, res, next) {
   user.changeCollection(req, res)
 })
 
 // 添加句子到专辑??
-// router.post('/postToCollection',function(req,res,next){
-//   const newSentence={
-//     content:req.body.content,
-//     referWorkName:req.body.referWorkName,
-//     referWorkAuthorName:req.body.referWorkAuthorName,
-//   }
-//   CollectionModel.findById(req.body.)
-// })
+router.post('/postToCollection/:id', function (req, res, next) {
+  const collectionId = req.params.id;
 
-//发布句子
-router.post('/addPost', function (req, res, next) {
-  console.log(req.body);
   const content = req.body.content;
   const tags = req.body.tags;
   const referWorkName = req.body.referWorkName
@@ -248,29 +256,92 @@ router.post('/addPost', function (req, res, next) {
   }
   // 总的句子添加
   TotalSentenceModel.create(newSentence).then(data => {
-    console.log(data);
-    const postSen = {
-      _id: data._id,
-      content: content,
-      tags: tags,
-      referWorkName: referWorkName,
-      referWorkAuthorName: referWorkAuthorName,
-      cntLike: 0,
-      cntComment: 0,
-    }
-    console.log(postSen);
+    // console.log(data);
+    // const postSen = {
+    //   _id: data._id,
+    //   content: content,
+    //   tags: tags,
+    //   referWorkName: referWorkName,
+    //   referWorkAuthorName: referWorkAuthorName,
+    //   cntLike: 0,
+    //   cntComment: 0,
+    // }
+    // console.log(postSen);
 
     // 管理员句子添加
     AdminModel.findById(req.session.admin_id, function (err, admin) {
       // 放入子文档中
-      admin.posts.push(postSen);
+      admin.posts.push({_id: data._id});
+      // save必需！！！
+      admin.save(function (err) {
+        if (err) return handleError(err)
+        console.log('Success!');
+        // res.send({
+        //   status: 1,
+        //   success: '创建成功'
+        // })
+      })
+    })
+    // 专辑句子添加
+    CollectionModel.findById(collectionId, function (err, collection) {
+      collection.posts.push({_id: data._id});
+      collection.save(function (err) {
+        if (err) return handleError(err)
+        console.log('Success!');
+        res.send({
+          status: 1,
+          success: '添加成功'
+        })
+      })
+    })
+  })
+
+})
+
+//发布句子
+router.post('/addPost', function (req, res, next) {
+  console.log(req.body);
+  const content = req.body.content;
+  const tags = req.body.tags;
+  const referWorkName = req.body.referWorkName
+  const referWorkAuthorName = req.body.referWorkAuthorName
+  const newSentence = {
+    content: content,
+    tags: tags,
+    referWorkName: referWorkName,
+    referWorkAuthorName: referWorkAuthorName,
+    creator: {
+      _id: req.session.admin_id,
+      username: req.session.user_name,
+      avatar: req.session.avatar,
+    },
+    cntLike: 0,
+    cntComment: 0,
+    comment: []
+  }
+  // 总的句子添加
+  TotalSentenceModel.create(newSentence).then(data => {
+    // console.log(data);
+    // const postSen = {
+    //   _id: data._id,
+    // }
+    // console.log(postSen);
+
+    // 管理员句子添加
+    AdminModel.findById(req.session.admin_id, function (err, admin) {
+      // 放入子文档中
+      // admin.posts.push(postSen);
+      admin.posts.push({
+        _id: data._id
+      });
       // save必需！！！
       admin.save(function (err) {
         if (err) return handleError(err)
         console.log('Success!');
         res.send({
           status: 1,
-          success: '创建成功'
+          data:data,
+          message: '创建成功'
         })
       })
     })
@@ -304,7 +375,7 @@ router.get('/deletePosts', function (req, res, next) {
   AdminModel.findByIdAndUpdate(req.session.admin_id, {
     '$pull': {
       'posts': {
-        '_id': req.body._id
+        '_id': req.query._id
       }
     }
   }, function (err, admin) {
@@ -350,47 +421,31 @@ router.get('/setLike', function (req, res, next) {
   const sentenceId = req.query._id;
 
   AdminModel.findById(req.session.admin_id, function (err, admin) {
-    // if(admin.likes)
     // some判断likes数组中是否已存在点赞句子id
-    if (admin.likes.some(item => item._id === sentenceId)) {
-      res.send({
-        status: 0,
-        message: "已经点赞过该句子"
-      })
-      return
-    }
-    TotalSentenceModel.findById(sentenceId, function (err, data) {
-      const like = {
-        _id: sentenceId,
-        content: data.content,
-        cntLike: data.cntLike + 1,
-        cntComment: data.cntComment,
-        referAuthorName: data.referAuthorName,
-        referWorkName: data.referWorkName,
-      }
-      // 句子添加进主页喜欢板块
-      admin.likes.push(like);
-      admin.save(function (err) {
-        if (err) return handleError(err)
-        res.send({
-          status: 1
-        })
-        console.log('Success!');
-      })
-      if (admin.posts.some(item => item._id === sentenceId)) {
-        // console.log(123);
-        admin.update({
-          "likes._id": sentenceId
-        }, {
-          $set: {
-            "likes.cntLike": admin.likes.cntLike++
-          }
-        })
-        // admin.posts[sentenceId].cntLike+=1;
-      }
-    })
+    // if (admin.likes.some(item => item._id === sentenceId)) {
+    //   res.send({
+    //     status: 0,
+    //     message: "已经点赞过该句子"
+    //   })
+    //   return
+    // }
 
+    admin.likes.push({
+      _id: sentenceId
+    });
+    admin.save(function (err) {
+      if (err) return handleError(err)
+      TotalSentenceModel.findById(sentenceId,function (err, data) {
+        data.cntLike++;
+        data.save()
+      })
+      res.send({
+        status: 1
+      })
+      console.log('Success!');
+    })
   })
+
 })
 // 取消点赞
 router.get('/removeLike', function (req, res, next) {
@@ -402,13 +457,42 @@ router.get('/removeLike', function (req, res, next) {
       }
     }
   }, function (err, admin) {
+    TotalSentenceModel.findById(sentenceId,function (err, data) {
+      data.cntLike--;
+      data.save()
+    })
     res.send({
       status: 1
     })
   })
 })
-router.post('/comment', function (req, res, next) {
 
+// 评论
+router.get('/comment/:id', function (req, res, next) {
+  const comment = req.query.comment;
+  TotalSentenceModel.findById(req.params.id, function (err, data) {
+    if (err) {
+      res.status(500).json({
+        status: 500,
+        message: err.message
+      })
+      return
+    }
+    data.cntComment++;
+    data.comment.push({
+      content: comment,
+      username: req.session.user_name,
+      create_time: dtime().format('YYYY-MM-DD HH:mm')
+    });
+    data.save(function (err) {
+      if (err) return handleError(err)
+      console.log('success');
+      res.send({
+        status: 1,
+        message: "评论成功"
+      })
+    })
+  })
 })
 
 
