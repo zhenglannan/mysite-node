@@ -1,9 +1,10 @@
 var mongoose =require ('mongoose')
+var movieData = require('../initData/workCollections/movieData')
 
 const Schema = mongoose.Schema;
 //专辑模板
 var collectionSchema=new Schema({
-  cover:{type: String, default: '/images/default.jpg'},
+  cover:{type: String, default: '/images/collectionDefault.jpg'},
   name:String,
   intro:String,
   create_time: String,
@@ -31,13 +32,14 @@ var collectionSchema=new Schema({
 
 // adminSchema.index({email: 1});
 
-var Collections = mongoose.model('Collections', collectionSchema);
-// Collections.find({}, function (err, data) {
+var Collection = mongoose.model('Collection', collectionSchema);
+// Collection.find({}, function (err, data) {
+//   console.log('data'+data);
 //   // 判断数组为空
 //   if (!data||data.length===0) {
-//     adminData.forEach(item => {
-//       Admins.create(item);
+//     movieData.forEach(item => {
+//       Collection.create(item);
 //     })
 //   }
 // })
-module.exports = Collections
+module.exports = Collection

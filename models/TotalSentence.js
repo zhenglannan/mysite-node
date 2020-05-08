@@ -35,16 +35,16 @@ var senSchema = new Schema({
   timestamps: true
 })
 // ??
-senSchema.index({createdAt: -1,cntLike:-1});
+senSchema.index({_id: -1,cntLike:-1});
 
 var TotalSentence = mongoose.model('TotalSentence', senSchema);
-TotalSentence.find({}, function (err, data) {
-  // 判断数组为空
-  if (!data||data.length===0) { 
-    sentenceData.forEach(item => {
-      TotalSentence.create(item);
-    })
-  }
-})
+// TotalSentence.find({}, function (err, data) {
+//   // 判断数组为空
+//   if (!data||data.length===0) { 
+//     sentenceData.forEach(item => {
+//       TotalSentence.create(item);
+//     })
+//   }
+// })
 
 module.exports = TotalSentence

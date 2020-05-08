@@ -43,7 +43,7 @@ router.get('/',function(req, res, next){
   var type=req.query.tag;
   // 查找数组字段中含有指定值
   SentenceModel.find({'tags':{$all:[type]}}).exec(function(err,data){
-    if(err){a
+    if(err){
       res.json({
         status:404,
         msg:err.message

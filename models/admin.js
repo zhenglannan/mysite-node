@@ -25,6 +25,18 @@ var adminSchema=new Schema({
   cntCollection:{type: Number, default: 0},
   cntPost:{type: Number, default: 0},
   tags:Array,
+  // 正在关注
+  followings:[{
+    _id:String,
+    avatar:String,
+    name:String
+  }],
+  // 关注者
+  followers:[{
+    _id:String,
+    avatar:String,
+    name:String
+  }],
   //发布的句子
   posts:[{
     _id:String,
@@ -57,12 +69,14 @@ var adminSchema=new Schema({
 adminSchema.index({email: 1},{_id:-1});
 
 var Admins = mongoose.model('Admins', adminSchema);
-Admins.find({}, function (err, data) {
-  // 判断数组为空
-  if (!data||data.length===0) {
-    adminData.forEach(item => {
-      Admins.create(item);
-    })
-  }
-})
+// Admins.find({}, function (err, data) {
+//   console.log('data'+data);
+  
+//   // 判断数组为空
+//   if (!data||data.length===0) {
+//     adminData.forEach(item => {
+//       Admins.create(item);
+//     })
+//   }
+// })
 module.exports = Admins

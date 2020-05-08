@@ -2,7 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var SentenceModel=require('../models/TotalSentence')
-
+// 查找相应的句子
 router.get('/findSentence',function(req, res, next){
   SentenceModel.findById(req.query._id,function (err, data){
     if (err) {

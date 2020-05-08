@@ -6,6 +6,8 @@
 
 - 点赞：TotalSentenceModel改cntLike is not defined
 
+- 关于collection创建初始化，需要先在其他js里require引入这个collection，才可以创建并初始化
+
 ## 性能优化
 
 - mongoDB建立索引

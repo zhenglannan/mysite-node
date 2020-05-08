@@ -46,7 +46,9 @@ router.post('/register', function (req, res, next) {
           posts: [],
           likes: [],
           collections: [],
-          avatar: '/images/default.jpg'
+          avatar: '/images/default.jpg',
+          followings:[],
+          followers:[]
         };
         AdminModel.create(newAdmin);
         // req.session.admin_id = newAdmin._id;
@@ -271,7 +273,9 @@ router.post('/postToCollection/:id', function (req, res, next) {
     // 管理员句子添加
     AdminModel.findById(req.session.admin_id, function (err, admin) {
       // 放入子文档中
-      admin.posts.push({_id: data._id});
+      admin.posts.push({
+        _id: data._id
+      });
       // save必需！！！
       admin.save(function (err) {
         if (err) return handleError(err)
@@ -284,7 +288,9 @@ router.post('/postToCollection/:id', function (req, res, next) {
     })
     // 专辑句子添加
     CollectionModel.findById(collectionId, function (err, collection) {
-      collection.posts.push({_id: data._id});
+      collection.posts.push({
+        _id: data._id
+      });
       collection.save(function (err) {
         if (err) return handleError(err)
         console.log('Success!');
@@ -340,7 +346,7 @@ router.post('/addPost', function (req, res, next) {
         console.log('Success!');
         res.send({
           status: 1,
-          data:data,
+          data: data,
           message: '创建成功'
         })
       })
@@ -406,7 +412,7 @@ router.post('/updatePwd', function (req, res, next) {
     }
     res.send({
       status: 1,
-      message: '修改成功'
+      message: '修改密码成功'
     })
     console.log(admin.password);
   })
@@ -416,33 +422,106 @@ router.post('/setTags', function (req, res, next) {
 
 })
 
+// 关注用户
+router.get('/starUser', function (req, res, next) {
+  console.log(req.query);
+  
+  const userId = req.query._id;
+  // 关注者里面加入数据
+  AdminModel.findById(req.session.admin_id,function(err,admin){
+     if (err) {
+      res.status(500).json({
+        status: 500,
+        message: err.message
+      })
+      return
+    }
+    admin.cntFollowing++;
+    admin.followings.push({_id:userId,avatar:req.query.avatar,name:req.query.name});
+    admin.save()
+    // 被关注者里面增加数据
+    AdminModel.findById(userId,function(err,admin2){
+      admin2.cntFollower++;
+      admin2.followers.push({_id:req.session.admin_id,avatar:req.query.avatar,name:req.query.name});
+      admin2.save()
+    })
+    res.send({
+      status: 1,
+      message: '关注成功'
+    })
+  })
+  
+
+})
+// 取消关注用户
+router.get('/cancelStarUser', function (req, res, next) {
+  console.log(req.query);
+
+  const userId = req.query._id;
+  // 关注者里面去除数据
+  AdminModel.findByIdAndUpdate(req.session.admin_id,{'$pull':{'followings':{'_id':userId}}},function(err,admin){
+    if (err) {
+      res.status(500).json({
+        status: 500,
+        message: err.message
+      })
+      return
+    }
+    admin.cntFollowing--;
+    admin.save(function(err){
+      if (err) return handleError(err)
+      // console.log('Success!');
+      console.log(admin);
+    })
+  })
+// 被关注者里面去除数据
+  AdminModel.findByIdAndUpdate(userId,{'$pull':{'followers':{'_id':req.session.admin_id}}},function(err,admin){
+    admin.cntFollower--;
+    admin.save(function(err){
+      if (err) return handleError(err)
+      // console.log('Success!');
+      console.log(admin);
+    })
+  })
+  res.send({
+    status: 1,
+    message: '取消关注成功'
+  })
+})
 // 点赞
 router.get('/setLike', function (req, res, next) {
   const sentenceId = req.query._id;
 
   AdminModel.findById(req.session.admin_id, function (err, admin) {
-    // some判断likes数组中是否已存在点赞句子id
-    // if (admin.likes.some(item => item._id === sentenceId)) {
-    //   res.send({
-    //     status: 0,
-    //     message: "已经点赞过该句子"
-    //   })
-    //   return
-    // }
-
     admin.likes.push({
       _id: sentenceId
     });
     admin.save(function (err) {
       if (err) return handleError(err)
-      TotalSentenceModel.findById(sentenceId,function (err, data) {
+      TotalSentenceModel.findById(sentenceId, function (err, data) {
         data.cntLike++;
-        data.save()
+        data.save();
+        // 给发布句子的作者getLike+1
+        // hasOwnProperty判断对象中是否有这个属性
+        if (data.hasOwnProperty('creator')) {
+          AdminModel.findById(data.creator._id, function (err, admin) {
+            if(err){
+              return 
+            }
+            admin.cntGetLike++;
+            admin.save();
+            console.log('user' + ' ' + admin);
+          })
+        } else {
+          console.log('no creator!!!' + data.creator);
+        }
+
+        res.send({
+          status: 1
+        })
+        console.log('Success!');
       })
-      res.send({
-        status: 1
-      })
-      console.log('Success!');
+
     })
   })
 
@@ -457,9 +536,17 @@ router.get('/removeLike', function (req, res, next) {
       }
     }
   }, function (err, admin) {
-    TotalSentenceModel.findById(sentenceId,function (err, data) {
+    TotalSentenceModel.findById(sentenceId, function (err, data) {
       data.cntLike--;
       data.save()
+      // 给发布句子的作者getLike+1
+      if (data.creator) {
+        AdminModel.findById(data.creator._id, function (err, admin) {
+          admin.cntGetLike--;
+          admin.save();
+          console.log('user' + ' ' + admin);
+        })
+      } 
     })
     res.send({
       status: 1
@@ -494,6 +581,45 @@ router.get('/comment/:id', function (req, res, next) {
     })
   })
 })
-
+// 收藏
+router.get('/collect/:id', function (req, res, next) {
+  const sentenceId = req.query.id;
+  CollectionModel.findById(req.params.id, function (err, collection) {
+    collection.posts.push({
+      _id: sentenceId
+    });
+    collection.save(function (err) {
+      if (err) return handleError(err)
+      console.log('success');
+      res.send({
+        status: 1,
+        message: "收藏成功"
+      })
+    })
+  })
+})
+// 取消收藏
+router.get('/cancelCollect/id', function (req, res, next) {
+  const sentenceId = req.query.id;
+  CollectionModel.findByIdAndUpdate(req.params.id, {
+    '$pull': {
+      'posts': {
+        '_id': sentenceId
+      }
+    }
+  }, function (err, collection) {
+    if (err) {
+      res.status(500).json({
+        status: 500,
+        message: err.message
+      })
+      return
+    }
+    res.send({
+      status: 1,
+      message: "取消收藏成功"
+    })
+  })
+})
 
 module.exports = router;
