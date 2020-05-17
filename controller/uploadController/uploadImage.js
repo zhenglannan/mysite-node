@@ -20,6 +20,7 @@ let user = {
     form.parse(req, function (err, fields, files) {
       const {
         name,
+        name,
         intro,
         file
       } = fields;
