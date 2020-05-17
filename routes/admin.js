@@ -1,3 +1,4 @@
+// 用户操作
 var express = require('express');
 var router = express.Router();
 var dtime = require('time-formater')
@@ -5,6 +6,8 @@ var md5 = require("blueimp-md5")
 var AdminModel = require('../models/admin')
 var CollectionModel = require('../models/collection')
 var TotalSentenceModel = require('../models/TotalSentence')
+var latestNewsModel = require('../models/latestNews')
+
 var user = require('../controller/uploadController/uploadImage')
 // 注册
 router.post('/register', function (req, res, next) {
@@ -47,8 +50,8 @@ router.post('/register', function (req, res, next) {
           likes: [],
           collections: [],
           avatar: '/images/default.jpg',
-          followings:[],
-          followers:[]
+          followings: [],
+          followers: []
         };
         AdminModel.create(newAdmin);
         // req.session.admin_id = newAdmin._id;
@@ -116,7 +119,7 @@ router.get('/signout', function (req, res, next) {
       } else {
         // console.log(req.session);
         res.send({
-          status: 1,
+          status: 0,
           success: '退出成功'
         })
       }
@@ -190,9 +193,7 @@ router.post('/addCollection', function (req, res, next) {
 // 查找专辑
 router.get('/findCollection', function (req, res, next) {
   console.log(req.query)
-  CollectionModel.findOne({
-    _id: req.query._id
-  }, function (err, data) {
+  CollectionModel.findById(req.query._id, function (err, data) {
     if (err) {
       res.send({
         status: 0,
@@ -258,18 +259,6 @@ router.post('/postToCollection/:id', function (req, res, next) {
   }
   // 总的句子添加
   TotalSentenceModel.create(newSentence).then(data => {
-    // console.log(data);
-    // const postSen = {
-    //   _id: data._id,
-    //   content: content,
-    //   tags: tags,
-    //   referWorkName: referWorkName,
-    //   referWorkAuthorName: referWorkAuthorName,
-    //   cntLike: 0,
-    //   cntComment: 0,
-    // }
-    // console.log(postSen);
-
     // 管理员句子添加
     AdminModel.findById(req.session.admin_id, function (err, admin) {
       // 放入子文档中
@@ -280,16 +269,12 @@ router.post('/postToCollection/:id', function (req, res, next) {
       admin.save(function (err) {
         if (err) return handleError(err)
         console.log('Success!');
-        // res.send({
-        //   status: 1,
-        //   success: '创建成功'
-        // })
       })
     })
     // 专辑句子添加
     CollectionModel.findById(collectionId, function (err, collection) {
       collection.posts.push({
-        _id: data._id
+        _id: data._id,
       });
       collection.save(function (err) {
         if (err) return handleError(err)
@@ -398,7 +383,7 @@ router.post('/updateInfo', function (req, res, next) {
   user.changeAdminInfo(req, res);
 })
 // 更改密码
-router.post('/updatePwd', function (req, res, next) {
+router.post('/updatePwd', function (req, res, next) { 
   const newPassword = md5(md5(req.body.password));
   AdminModel.findByIdAndUpdate(req.session.admin_id, {
     password: newPassword
@@ -425,11 +410,11 @@ router.post('/setTags', function (req, res, next) {
 // 关注用户
 router.get('/starUser', function (req, res, next) {
   console.log(req.query);
-  
+
   const userId = req.query._id;
   // 关注者里面加入数据
-  AdminModel.findById(req.session.admin_id,function(err,admin){
-     if (err) {
+  AdminModel.findById(req.session.admin_id, function (err, admin) {
+    if (err) {
       res.status(500).json({
         status: 500,
         message: err.message
@@ -437,12 +422,20 @@ router.get('/starUser', function (req, res, next) {
       return
     }
     admin.cntFollowing++;
-    admin.followings.push({_id:userId,avatar:req.query.avatar,name:req.query.name});
+    admin.followings.push({
+      _id: userId,
+      avatar: req.query.avatar,
+      name: req.query.name
+    });
     admin.save()
     // 被关注者里面增加数据
-    AdminModel.findById(userId,function(err,admin2){
+    AdminModel.findById(userId, function (err, admin2) {
       admin2.cntFollower++;
-      admin2.followers.push({_id:req.session.admin_id,avatar:req.query.avatar,name:req.query.name});
+      admin2.followers.push({
+        _id: req.session.admin_id,
+        avatar: req.query.avatar,
+        name: req.query.name
+      });
       admin2.save()
     })
     res.send({
@@ -450,7 +443,7 @@ router.get('/starUser', function (req, res, next) {
       message: '关注成功'
     })
   })
-  
+
 
 })
 // 取消关注用户
@@ -459,7 +452,13 @@ router.get('/cancelStarUser', function (req, res, next) {
 
   const userId = req.query._id;
   // 关注者里面去除数据
-  AdminModel.findByIdAndUpdate(req.session.admin_id,{'$pull':{'followings':{'_id':userId}}},function(err,admin){
+  AdminModel.findByIdAndUpdate(req.session.admin_id, {
+    '$pull': {
+      'followings': {
+        '_id': userId
+      }
+    }
+  }, function (err, admin) {
     if (err) {
       res.status(500).json({
         status: 500,
@@ -468,16 +467,22 @@ router.get('/cancelStarUser', function (req, res, next) {
       return
     }
     admin.cntFollowing--;
-    admin.save(function(err){
+    admin.save(function (err) {
       if (err) return handleError(err)
       // console.log('Success!');
       console.log(admin);
     })
   })
-// 被关注者里面去除数据
-  AdminModel.findByIdAndUpdate(userId,{'$pull':{'followers':{'_id':req.session.admin_id}}},function(err,admin){
+  // 被关注者里面去除数据
+  AdminModel.findByIdAndUpdate(userId, {
+    '$pull': {
+      'followers': {
+        '_id': req.session.admin_id
+      }
+    }
+  }, function (err, admin) {
     admin.cntFollower--;
-    admin.save(function(err){
+    admin.save(function (err) {
       if (err) return handleError(err)
       // console.log('Success!');
       console.log(admin);
@@ -488,7 +493,7 @@ router.get('/cancelStarUser', function (req, res, next) {
     message: '取消关注成功'
   })
 })
-// 点赞
+// 点赞 
 router.get('/setLike', function (req, res, next) {
   const sentenceId = req.query._id;
 
@@ -499,25 +504,36 @@ router.get('/setLike', function (req, res, next) {
     admin.save(function (err) {
       if (err) return handleError(err)
       TotalSentenceModel.findById(sentenceId, function (err, data) {
+        // 句子点赞数+1
         data.cntLike++;
         data.save();
+        // 添加最新动态
+        latestNewsModel.create({
+          userId: req.session.admin_id,
+          name: req.session.user_name,
+          avatar: req.session.avatar,
+          sentenceId: sentenceId,
+          content: data.content
+        })
         // 给发布句子的作者getLike+1
         // hasOwnProperty判断对象中是否有这个属性
-        if (data.hasOwnProperty('creator')) {
+        // if(data.hasOwnProperty(creator))??
+        if (data.creator) {
           AdminModel.findById(data.creator._id, function (err, admin) {
-            if(err){
-              return 
-            }
+            if (err) {
+              return
+            } 
+            console.log('before' + ' ' + admin.cntGetLike);
             admin.cntGetLike++;
             admin.save();
-            console.log('user' + ' ' + admin);
+            console.log('after' + ' ' + admin.cntGetLike);
           })
         } else {
           console.log('no creator!!!' + data.creator);
         }
-
         res.send({
-          status: 1
+          status: 1,
+          message: '点赞成功'
         })
         console.log('Success!');
       })
@@ -537,16 +553,19 @@ router.get('/removeLike', function (req, res, next) {
     }
   }, function (err, admin) {
     TotalSentenceModel.findById(sentenceId, function (err, data) {
-      data.cntLike--;
+      if (data.cntLike > 0) {
+        data.cntLike--;
+      }
       data.save()
       // 给发布句子的作者getLike+1
       if (data.creator) {
         AdminModel.findById(data.creator._id, function (err, admin) {
+          console.log('beforeremove' + ' ' + admin.cntGetLike);
           admin.cntGetLike--;
           admin.save();
-          console.log('user' + ' ' + admin);
+          console.log('afterremove' + ' ' + admin.cntGetLike);
         })
-      } 
+      }
     })
     res.send({
       status: 1
@@ -569,7 +588,7 @@ router.get('/comment/:id', function (req, res, next) {
     data.comment.push({
       content: comment,
       username: req.session.user_name,
-      create_time: dtime().format('YYYY-MM-DD HH:mm')
+      create_time: dtime().format('YYYY-MM-DD HH:mm:ss')
     });
     data.save(function (err) {
       if (err) return handleError(err)
@@ -586,7 +605,8 @@ router.get('/collect/:id', function (req, res, next) {
   const sentenceId = req.query.id;
   CollectionModel.findById(req.params.id, function (err, collection) {
     collection.posts.push({
-      _id: sentenceId
+      _id: sentenceId,
+      // 用空内容顶替排版
     });
     collection.save(function (err) {
       if (err) return handleError(err)
@@ -599,7 +619,7 @@ router.get('/collect/:id', function (req, res, next) {
   })
 })
 // 取消收藏
-router.get('/cancelCollect/id', function (req, res, next) {
+router.get('/cancelCollect/:id', function (req, res, next) {
   const sentenceId = req.query.id;
   CollectionModel.findByIdAndUpdate(req.params.id, {
     '$pull': {

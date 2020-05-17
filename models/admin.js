@@ -68,7 +68,7 @@ var adminSchema=new Schema({
 
 adminSchema.index({email: 1},{_id:-1});
 
-var Admins = mongoose.model('Admins', adminSchema);
+var Admin = mongoose.model('Admin', adminSchema);
 // Admins.find({}, function (err, data) {
 //   console.log('data'+data);
   
@@ -79,4 +79,4 @@ var Admins = mongoose.model('Admins', adminSchema);
 //     })
 //   }
 // })
-module.exports = Admins
+module.exports = Admin

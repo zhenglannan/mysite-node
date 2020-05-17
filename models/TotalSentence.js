@@ -1,6 +1,6 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
-var sentenceData = require('../initData/sentences')
+var sentencesData = require('../initData/sentencesData')
 //句子模板
 var senSchema = new Schema({
   // uuid: {
@@ -11,8 +11,14 @@ var senSchema = new Schema({
     type: String,
     required: true
   },
-  cntComment: {type: Number, default: 0},
-  cntLike: {type: Number, default: 0},
+  cntComment: {
+    type: Number,
+    default: 0
+  },
+  cntLike: {
+    type: Number,
+    default: 0
+  },
   referAuthorName: String,
   referWorkId: String,
   referWorkName: String,
@@ -22,22 +28,28 @@ var senSchema = new Schema({
   creator: {
     _id: String,
     username: String,
-    avatar:String,
+    avatar: String,
     // intro: String
   },
   comment: [{
-    username:String,
+    username: String,
     content: String,
     create_time: String,
   }]
-}, {//时间戳
+}, { //时间戳
   versionKey: false,
   timestamps: true
 })
 // ??
-senSchema.index({_id: -1,cntLike:-1});
+senSchema.index({
+  _id: -1,
+  cntLike: -1
+});
 
 var TotalSentence = mongoose.model('TotalSentence', senSchema);
+// sentencesData.forEach(item => {
+//   TotalSentence.create(item);
+// })
 // TotalSentence.find({}, function (err, data) {
 //   // 判断数组为空
 //   if (!data||data.length===0) { 

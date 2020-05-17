@@ -5,8 +5,8 @@ module.exports=[{
   create_time: '2019-08-20 ',
   // updata_time:String,
   creator: {
-    _id: '123',
-    username: '系统命名',
+    _id: '5eb187ee52d4e1016835b7c6',
+    username: 'u2',
   },
   //包含的句子
   posts:[{  
@@ -135,7 +135,7 @@ module.exports=[{
     _id:'5eb53ad47052ea262452b8a9',
     content:'相牵挂的感情是需要珍惜的哦'
   },{  
-    _id:'5eb53ae97052ea262452b8aa',
+    _id:'5eb53ae97052ea262452b8aa', 
     content:`“你确定要和我一起流浪吗？”
             “我想和你在一起”`
   },{  

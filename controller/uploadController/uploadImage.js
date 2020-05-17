@@ -42,7 +42,7 @@ let user = {
         // let time = '_' + date.getFullYear() + "_" + date.getMonth() + "_" + date.getDay() + "_" + date.getHours() + "_" + date.getMinutes();
         let avatarName = prefixname + dtime().format('YYYY-MM-DD') + '.' + type;
         let newPath = form.uploadDir + "/" + avatarName;
-        let showPath = newPath.split('public')[1];
+        let showPath = newPath.split('public')[1]; 
         // 重命名
         fs.rename(files.file.path, newPath, function (err) {
           if (err) {

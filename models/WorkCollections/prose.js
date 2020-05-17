@@ -36,11 +36,25 @@ Prose.find({}, function (err, data) {
   // 判断数组为空
   if (!data||data.length===0) {
     proseData.forEach(item => {
-      collection.create(item);
+      // collection.create(item);
       Prose.create(item,function(err,docs){
         if(err) {
               console.log(err);
             } else {
+              const collectionDoc = {
+                _id: docs._id,
+                cover: docs.cover,
+                name: docs.name,
+                intro: docs.intro,
+                create_time: docs.create_time,
+                creator: {
+                  _id: docs.creator._id,
+                  username: docs.creator.username
+                },
+                // 扩展运算符
+                posts: [...docs.posts]
+              }
+              collection.create(collectionDoc);
               console.log('save ok');
             }
       });

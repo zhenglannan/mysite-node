@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var SentenceModel=require('../models/TotalSentence')
 
+// 首页句子热门/最新展示
 router.get('/:type',function(req, res, next){
   const page=parseInt(req.query.currentPage);
   const pageSize=parseInt(req.query.pageSize);
@@ -31,12 +32,6 @@ router.get('/:type',function(req, res, next){
       }
     })
   }
-})
-// 查找全部句子
-router.get('/all',function(req,res,next){
-  SentenceModel.find({},function(err,list){
-    res.send(list)
-  })
 })
 
 module.exports = router;

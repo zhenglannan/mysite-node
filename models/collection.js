@@ -16,18 +16,8 @@ var collectionSchema=new Schema({
   //包含的句子
   posts:[{  
     _id:String,
-    // content:String,
-    // cntLike:{type:Number,default:0},
-    // cntComment:{type:Number,default:0},
-    // referAuthorName: String,
-    // referWorkName: String,
-  }],
-  // 发布专辑人的其他专辑??
-  // otherCollections:[{
-  //   _id:String,
-  //   cover:{type: String, default: '/images/default.jpg'},
-  //   name:String
-  // }]
+    // content:String
+  }]
 })
 
 // adminSchema.index({email: 1});

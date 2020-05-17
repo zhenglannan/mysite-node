@@ -23,7 +23,7 @@ var collectionSchema=new Schema({
 
 // adminSchema.index({email: 1});
 
-var Novels = mongoose.model('Novels', collectionSchema);
+var Novel = mongoose.model('Novel', collectionSchema);
 // Novels.create(novelData,function(err,docs){
 //   if(err) {
 //     console.log(err);
@@ -32,19 +32,33 @@ var Novels = mongoose.model('Novels', collectionSchema);
 //     // console.log(docs);
 //   }
 // });
-Novels.find({}, function (err, data) {
+Novel.find({}, function (err, data) {
   // 判断数组为空
   if (!data||data.length===0) {
     novelData.forEach(item => {
-      collection.create(item);
+      // collection.create(item);
       Novels.create(item,function(err,docs){
         if(err) {
               console.log(err);
             } else {
+              const collectionDoc = {
+                _id: docs._id,
+                cover: docs.cover,
+                name: docs.name,
+                intro: docs.intro,
+                create_time: docs.create_time,
+                creator: {
+                  _id: docs.creator._id,
+                  username: docs.creator.username
+                },
+                // 扩展运算符
+                posts: [...docs.posts]
+              }
+              collection.create(collectionDoc);
               console.log('save ok');
             }
       });
     })
   }
 })
-module.exports = Novels
+module.exports = Novel
